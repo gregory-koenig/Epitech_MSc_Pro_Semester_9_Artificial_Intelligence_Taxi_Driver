@@ -1,0 +1,38 @@
+env.reset : Réinitialise l'environnement et renvoie un état initial aléatoire.
+env.step(action) : Fait avancer l'environnement d'un pas de temps.
+env.step(action) retourne les variables suivantes
+
+- observation : Observations de l'environnement.
+- reward : Si votre action a été bénéfique ou non
+effectué : Indique si nous avons réussi à prendre et à déposer un passager, également appelé un épisode.
+- info : Informations supplémentaires telles que les performances et la latence à des fins de débogage.
+- env.render : Rendu d'une image de l'environnement (utile pour visualiser l'environnement)
+
+
+Dans l'environnement, il y a quatre emplacements possibles où vous pouvez déposer les passagers dans le taxi, à savoir : R, G, Y, B ou [(0,0), (0,4), (4,0), (4,3)] en coordonnées (row, col) si vous pouvez interpréter l'environnement représenté ci-dessus comme un axe de coordonnées.
+
+Si l'on tient également compte d'un (1) état supplémentaire du passager, à savoir qu'il se trouve à l'intérieur du taxi, on peut prendre toutes les combinaisons d'emplacements des passagers et de destinations pour obtenir un nombre total d'états pour notre environnement de taxi ; il y a quatre (4) destinations et cinq (4 + 1) emplacements de passagers. Ainsi, notre environnement de taxi a 5×5×5×4=500 états possibles au total. L'agent rencontre l'un de ces 500 états et prend des mesures. Dans notre cas, l'action peut consister à se déplacer dans une direction ou à décider de prendre/déposer un passager.
+
+En d'autres termes, nous avons six actions possibles : prendre, déposer, nord, est, sud, ouest (ces quatre directions sont les mouvements par lesquels le taxi est déplacé).
+
+action space : l'ensemble de toutes les actions que notre agent peut entreprendre dans un état donné.
+
+Dans le code de l'environnement, nous allons simplement prévoir une pénalité de -1 pour chaque mur touché et le taxi ne bougera pas. Cela ne fera qu'accumuler les pénalités, ce qui amènera le taxi à envisager de contourner le mur.
+
+
+Reward Table : Lorsque l'environnement Taxi est créé, une table de récompenses initiale est également créée, appelée P. Nous pouvons la considérer comme une matrice dont le nombre d'états est indiqué en lignes et le nombre d'actions en colonnes, c'est-à-dire une matrice états × actions.
+
+Le dictionnaire a une structure {action: [(probability, nextstate, reward, done)]}.
+Exemple : 
+
+{0: [(1.0, 433, -1, False)], 
+ 1: [(1.0, 233, -1, False)],
+ 2: [(1.0, 353, -1, False)],
+ 3: [(1.0, 333, -1, False)],
+ 4: [(1.0, 333, -10, False)],
+ 5: [(1.0, 333, -10, False)]
+}
+
+Les valeurs 0 à 5 correspondent aux actions (sud, nord, est, ouest, prise en charge, dépose) que le taxi peut effectuer à notre état actuel dans l'illustration.
+L'action est utilisée pour nous indiquer que nous avons réussi à déposer un passager au bon endroit.
+Pour résoudre le problème sans apprentissage par renforcement, nous pouvons définir l'état d'objectif, choisir quelques espaces d'échantillonnage et ensuite, s'il atteint l'état d'objectif avec un certain nombre d'itérations, nous supposons qu'il s'agit de la récompense maximale, sinon la récompense est augmentée si elle est proche de l'état d'objectif et la pénalité est augmentée si la récompense pour l'étape est -10, ce qui est le minimum.

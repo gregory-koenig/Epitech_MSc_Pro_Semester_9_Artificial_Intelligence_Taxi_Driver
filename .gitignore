@@ -36,3 +36,11 @@ nbproject/*
 .vscode
 # Sass preprocessor
 .sass-cache/
+
+# Project
+venv
+/venv
+/venv/
+.idea
+.idea/
+/.idea/
